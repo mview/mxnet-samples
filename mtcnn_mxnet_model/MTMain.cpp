@@ -92,6 +92,7 @@ public:
         Symbol net;
         net_   = Symbol::Load(symbol_name);
         LoadParameters(GetContext(),para_name);
+        executor_ =NULL;
         if (shape[2] && shape[3]) {
             args_map_["data"] = NDArray(shape,GetContext());
             executor_ = net_.SimpleBind(GetContext(), args_map_);
@@ -113,7 +114,7 @@ public:
     void Forward(Blob *input=nullptr){
         bool is_train=false;
         if (input) {
-            delete executor_;
+            if(executor_)delete executor_;
             if (input->GetContext().GetDeviceType()==devicetype_) {
                 args_map_["data"] = *input; 
             }else{
